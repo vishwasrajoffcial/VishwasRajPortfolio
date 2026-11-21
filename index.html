@@ -603,6 +603,20 @@
 
                 -->
 
+                <div class="portfolio-controls" aria-label="Filter portfolio projects">
+                    <div class="portfolio-format-filters" id="formatFilters" role="group" aria-label="Project format">
+                        <button type="button" class="portfolio-filter active" data-format="ALL" aria-pressed="true">All Work</button>
+                        <button type="button" class="portfolio-filter" data-format="LONG FORM" aria-pressed="false">Long Form</button>
+                        <button type="button" class="portfolio-filter" data-format="SHORT FORM" aria-pressed="false">Short Form</button>
+                    </div>
+                    <div class="portfolio-tools">
+                        <select id="categoryFilter" class="portfolio-select" aria-label="Filter by category">
+                            <option value="ALL">All Categories</option>
+                        </select>
+                        <input id="portfolioSearch" class="portfolio-search" type="search" placeholder="Search projects..." aria-label="Search projects">
+                    </div>
+                </div>
+
                 <div
                     class="portfolio-grid"
                     id="portfolioGrid">

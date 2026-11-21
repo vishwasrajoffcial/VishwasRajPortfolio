@@ -4,63 +4,83 @@
 ========================================= */
 
 const projects = [
-
+    // LONG FORM PROJECTS
     {
-        title: "Subhash Chandra Bose : A Freedom fighter who never dies ",
-        description:
-            "Long-form documentary video edited with storytelling-focused pacing, visual transitions and supporting elements.",
+        title: "Subhash Chandra Bose: A Freedom Fighter Who Never Dies",
+        description: "Long-form documentary video edited with storytelling-focused pacing, visual transitions and supporting elements.",
+        format: "LONG FORM",
         category: "DOCUMENTARY",
         video: "https://www.youtube.com/embed/zQ9IqMjmQIs",
         watch: "https://www.youtube.com/watch?v=zQ9IqMjmQIs"
     },
-
     {
-        title: "Major Iqbal : The Real Terror Behind Dhurandhar 😱| Ilyas Kashmiri Dark Truth Explained",
-        description:
-            "Documentary-style video edit focused on storytelling, pacing and engaging visual presentation.",
+        title: "Major Iqbal: The Real Terror Behind Dhurandhar",
+        description: "Documentary-style video edit focused on storytelling, pacing and engaging visual presentation.",
+        format: "LONG FORM",
         category: "DOCUMENTARY",
         video: "https://www.youtube.com/embed/U5wJ2SUCbuA",
         watch: "https://www.youtube.com/watch?v=U5wJ2SUCbuA"
     },
-
     {
-        title: "Babur - From Local King to Mughal emperor | Mughal Invasion in India| Babur History |",
-        description:
-            "Story-driven documentary edit with structured pacing, visuals and cinematic presentation.",
+        title: "Babur - From Local King to Mughal Emperor",
+        description: "Story-driven documentary edit with structured pacing, visuals and cinematic presentation.",
+        format: "LONG FORM",
         category: "DOCUMENTARY",
         video: "https://www.youtube.com/embed/5UEAGTxqO4E",
         watch: "https://www.youtube.com/watch?v=5UEAGTxqO4E"
     },
+    {
+        title: "Motion Graphics StoryBoard Video",
+        description: "Story-driven documentary edit with structured pacing, visuals and cinematic presentation.",
+        format: "LONG FORM",
+        category: "MOTION GRAPHICS",
+        video: "https://www.youtube.com/embed/OTW2BjZ4r4U",
+        watch: "https://www.youtube.com/watch?v=OTW2BjZ4r4U"
+    },
+    //https://youtu.be/OTW2BjZ4r4U-- jUST CHANGE THE CODE ON PROJECT 'video'and 'watch' and will add
 
+    // SHORT FORM PROJECTS
     {
         title: "Motion Graphics Reel",
-        description:
-            "Short-form motion graphics video with animated elements, typography and dynamic visual transitions.",
+        description: "Engaging short-form video edit with dynamic pacing, smooth transitions and professional editing.",
+        format: "SHORT FORM",
         category: "MOTION GRAPHICS",
-        video: "https://www.youtube.com/embed/48kstnTzGY0",
-        watch: "https://www.youtube.com/watch?v=48kstnTzGY0"
+        video: "https://www.youtube.com/embed/Bb_NpFgQayE",
+        watch: "https://www.youtube.com/shorts/Bb_NpFgQayE"
     },
-
+    {
+        title: "Motion Graphics Reel",
+        description: "Engaging short-form video edit with dynamic pacing, smooth transitions and professional editing.",
+        format: "SHORT FORM",
+        category: "MOTION GRAPHICS",
+        video: "https://www.youtube.com/embed/u-8csu4-l3E",
+        watch: "https://www.youtube.com/shorts/u-8csu4-l3E"
+    },//https://youtube.com/shorts/u-8csu4-l3E
     {
         title: "India's Richest State",
-        description:
-            "Short-form informational video combining motion graphics, text animation, visual storytelling and engaging pacing.",
-        category: "MOTION GRAPHICS",
+        description: "Short-form informational video combining motion graphics, text animation, visual storytelling and engaging pacing.",
+        format: "SHORT FORM",
+        category: "DOCUMENTARY",
         video: "https://www.youtube.com/embed/XLq98KyYgfk",
         watch: "https://www.youtube.com/watch?v=XLq98KyYgfk"
     },
-
     {
-        title: "Dark Reality - Drug in India",
-        description:
-            "Podcast-style short video edited with engaging pacing, captions, visual elements and social-media focused presentation.",
-        category: "PODCAST / SHORT",
+        title: "Hiter fooled?",
+        description: "Short-form informational video combining map animation, motion graphics, text animation, visual storytelling and engaging pacing.",
+        format: "SHORT FORM",
+        category: "DOCUMENTARY",
+        video: "https://www.youtube.com/embed/17KRKr00sKM",
+        watch: "https://www.youtube.com/watch?v=17KRKr00sKM"
+    },
+    {
+        title: "Dark Reality - Drugs in India",
+        description: "Podcast-style short video edited with engaging pacing, captions, visual elements and social-media focused presentation.",
+        format: "SHORT FORM",
+        category: "PODCAST CLIP",
         video: "https://www.youtube.com/embed/3GD_wHUYo-w",
         watch: "https://www.youtube.com/watch?v=3GD_wHUYo-w"
     }
-
 ];
-
 
 /* =========================================
    SERVICES
@@ -112,6 +132,14 @@ const services = [
 
 const portfolioGrid =
     document.getElementById("portfolioGrid");
+
+const portfolioSearch = document.getElementById("portfolioSearch");
+const formatFilters = document.getElementById("formatFilters");
+const categoryFilter = document.getElementById("categoryFilter");
+
+let activeFormat = "ALL";
+let activeCategory = "ALL";
+let searchTerm = "";
 
 const servicesList =
     document.getElementById("servicesList");
@@ -230,114 +258,122 @@ function thumbnailFallback(image) {
 ========================================= */
 
 function renderProjects() {
-
     if (!portfolioGrid) return;
 
+    const filteredProjects = projects
+        .map((project, originalIndex) => ({ ...project, originalIndex }))
+        .filter((project) => {
+            const matchesFormat = activeFormat === "ALL" || project.format === activeFormat;
+            const matchesCategory = activeCategory === "ALL" || project.category === activeCategory;
+            const searchableText = `${project.title} ${project.description} ${project.category} ${project.format}`.toLowerCase();
+            return matchesFormat && matchesCategory && searchableText.includes(searchTerm);
+        });
+
     portfolioGrid.innerHTML = "";
+    if (!filteredProjects.length) {
+        portfolioGrid.innerHTML = '<p class="no-projects">No projects found. Try another search or filter.</p>';
+        return;
+    }
 
-    projects.forEach((project, index) => {
+    filteredProjects.forEach((project) => {
+        const index = project.originalIndex;
+        const thumbnail = getYouTubeThumbnail(project.video);
+        const thumbnailHTML = thumbnail
+            ? `<img src="${thumbnail}" alt="${escapeHTML(project.title)}" loading="lazy" data-video="${project.video}">`
+            : `<div class="thumbnail-placeholder"><span>▶</span></div>`;
 
-        const card =
-            document.createElement("article");
-
-        card.className =
-            "project-card reveal";
-
+        const card = document.createElement("article");
+        card.className = "project-card reveal";
         card.dataset.index = index;
-
-        const thumbnail =
-            getYouTubeThumbnail(project.video);
-
-        let thumbnailHTML = "";
-
-        if (thumbnail) {
-
-            thumbnailHTML = `
-                <img
-                    src="${thumbnail}"
-                    alt="${escapeHTML(project.title)}"
-                    loading="lazy"
-                    data-video="${project.video}"
-                >
-            `;
-
-        } else {
-
-            thumbnailHTML = `
-                <div class="thumbnail-placeholder">
-                    <span>▶</span>
-                </div>
-            `;
-        }
-
         card.innerHTML = `
-
             <div class="project-thumbnail">
-
                 ${thumbnailHTML}
-
+                <iframe class="project-hover-preview"
+                    title="${escapeHTML(project.title)} preview"
+                    data-video-id="${getYouTubeID(project.video) || ""}"
+                    src="" allow="autoplay; encrypted-media; picture-in-picture"
+                    frameborder="0" tabindex="-1" aria-hidden="true"></iframe>
                 <div class="project-overlay">
-
-                    <div class="project-play">
-                        ▶
-                    </div>
-
-                    <span class="project-category">
-                        ${escapeHTML(project.category)}
-                    </span>
-
+                    <div class="project-play">▶</div>
+                    <span class="project-category">${escapeHTML(project.format)} / ${escapeHTML(project.category)}</span>
                 </div>
-
             </div>
-
             <div class="project-info">
-
                 <div>
-
-                    <span class="project-category">
-                        ${escapeHTML(project.category)}
-                    </span>
-
-                    <h3>
-                        ${escapeHTML(project.title)}
-                    </h3>
-
-                    <p>
-                        ${escapeHTML(project.description)}
-                    </p>
-
+                    <span class="project-category">${escapeHTML(project.format)} · ${escapeHTML(project.category)}</span>
+                    <h3>${escapeHTML(project.title)}</h3>
+                    <p>${escapeHTML(project.description)}</p>
                 </div>
+                <span class="project-watch">VIEW PROJECT ↗</span>
+            </div>`;
 
-                <span class="project-watch">
-                    VIEW PROJECT ↗
-                </span>
+        const image = card.querySelector("img");
+        if (image) image.addEventListener("error", () => thumbnailFallback(image));
 
-            </div>
-        `;
+        const previewFrame = card.querySelector(".project-hover-preview");
+        const previewId = previewFrame?.dataset.videoId;
+        const thumbnailImage = card.querySelector(".project-thumbnail img");
 
-        const image =
-            card.querySelector("img");
-
-        if (image) {
-
-            image.addEventListener(
-                "error",
-                () => thumbnailFallback(image)
-            );
+        if (previewFrame && previewId) {
+            card.addEventListener("mouseenter", () => {
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                previewFrame.src = `https://www.youtube.com/embed/${previewId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${previewId}&playsinline=1&rel=0`;
+                previewFrame.style.opacity = "1";
+                if (thumbnailImage) thumbnailImage.style.opacity = "0";
+            });
+            card.addEventListener("mouseleave", () => {
+                previewFrame.src = "";
+                previewFrame.style.opacity = "0";
+                if (thumbnailImage) thumbnailImage.style.opacity = "";
+            });
         }
 
-        card.addEventListener(
-            "click",
-            () => openProject(index)
-        );
-
+        card.addEventListener("click", () => openProject(index));
         portfolioGrid.appendChild(card);
-
     });
-
     observeRevealElements();
 }
 
+function updateCategoryOptions() {
+    if (!categoryFilter) return;
+    const available = activeFormat === "ALL" ? projects : projects.filter(p => p.format === activeFormat);
+    const categories = [...new Set(available.map(p => p.category))].sort();
+
+    if (activeCategory !== "ALL" && !categories.includes(activeCategory)) activeCategory = "ALL";
+    categoryFilter.innerHTML = '<option value="ALL">All Categories</option>' +
+        categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+    categoryFilter.value = activeCategory;
+}
+
+function setupPortfolioFilters() {
+    if (formatFilters) {
+        formatFilters.addEventListener("click", (event) => {
+            const button = event.target.closest("[data-format]");
+            if (!button) return;
+            activeFormat = button.dataset.format;
+            formatFilters.querySelectorAll("[data-format]").forEach(item => {
+                const active = item === button;
+                item.classList.toggle("active", active);
+                item.setAttribute("aria-pressed", String(active));
+            });
+            updateCategoryOptions();
+            renderProjects();
+        });
+    }
+    if (categoryFilter) {
+        categoryFilter.addEventListener("change", () => {
+            activeCategory = categoryFilter.value;
+            renderProjects();
+        });
+    }
+    if (portfolioSearch) {
+        portfolioSearch.addEventListener("input", () => {
+            searchTerm = portfolioSearch.value.trim().toLowerCase();
+            renderProjects();
+        });
+    }
+    updateCategoryOptions();
+}
 
 /* =========================================
    RENDER SERVICES
@@ -418,7 +454,7 @@ function openProject(index) {
                     src="${project.video}"
                     title="${escapeHTML(project.title)}"
                     loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>
@@ -1001,6 +1037,7 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
+        setupPortfolioFilters();
         renderProjects();
 
         renderServices();
@@ -1009,3 +1046,37 @@ document.addEventListener(
 
     }
 );
+
+/* SINGLE GLOWING CURSOR */
+
+(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    const glow = document.createElement("div");
+    glow.id = "cursor-glow";
+    document.body.appendChild(glow);
+
+    let mouseX = -200;
+    let mouseY = -200;
+
+    let currentX = -200;
+    let currentY = -200;
+
+    window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateGlow() {
+        // Smooth cursor following
+        currentX += (mouseX - currentX) * 0.12;
+        currentY += (mouseY - currentY) * 0.12;
+
+        glow.style.left = currentX + "px";
+        glow.style.top = currentY + "px";
+
+        requestAnimationFrame(animateGlow);
+    }
+
+    animateGlow();
+})();
