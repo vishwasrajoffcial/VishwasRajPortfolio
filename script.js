@@ -125,6 +125,26 @@ const services = [
 
 ];
 
+/* =========================================
+   CLIENTS & CLIENT REVIEWS
+   Add your own image paths and details here.
+   Put images inside assets/images/clients/ and assets/images/reviews/.
+========================================= */
+const clients = [
+    { name: "Dr Vamshi Bharadwaj", role: "Doctor", description: "Video editing collaboration", image: "assets/images/clients/client-01.png" },
+    { name: "HealthAlly", role: "Brand", description: "Short-form video editing", image: "assets/images/clients/client-02.png" },
+    { name: "Ray Ai", role: "Brand", description: "Editing and visual storytelling", image: "assets/images/clients/client-03.png" },
+    { name: "Veerkaal", role: "YouTube Creator", description: "Long-form video editing", image: "assets/images/clients/client-04.jpg" }
+];
+
+const clientReviews = [
+    { title: "Client Feedback 01", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-01.jpg" },
+    { title: "Client Feedback 02", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-02.jpg" },
+    { title: "Client Feedback 03", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-03.jpg" },
+    { title: "Client Feedback 04", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-04.jpg" },
+    { title: "Client Feedback 04", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-05.jpg" },
+    { title: "Client Feedback 04", detail: "LinkedIn screenshot", image: "assets/images/reviews/review-06.png" }
+];
 
 /* =========================================
    DOM ELEMENTS
@@ -165,7 +185,6 @@ const modalClose =
 const modalContent =
     document.getElementById("modalContent");
 
-
 /* =========================================
    GET YOUTUBE VIDEO ID
 ========================================= */
@@ -193,7 +212,6 @@ function getYouTubeID(url) {
     return null;
 }
 
-
 /* =========================================
    AUTOMATIC YOUTUBE THUMBNAIL
 ========================================= */
@@ -208,7 +226,6 @@ function getYouTubeThumbnail(videoURL) {
 
     return `https://img.youtube.com/vi/${videoID}/hqdefault.jpg`;
 }
-
 
 /* =========================================
    THUMBNAIL FALLBACK
@@ -251,7 +268,6 @@ function thumbnailFallback(image) {
         parent.prepend(placeholder);
     }
 }
-
 
 /* =========================================
    RENDER PROJECTS
@@ -423,6 +439,54 @@ function renderServices() {
     observeRevealElements();
 }
 
+/* =========================================
+   RENDER CLIENTS & REVIEWS
+========================================= */
+function renderClients() {
+    const track = document.getElementById("clientTrack");
+    if (!track) return;
+
+    const createCards = () => clients.map(client => `
+        <article class="client-card">
+            <div class="client-photo-wrap">
+                <img src="${escapeHTML(client.image)}" alt="${escapeHTML(client.name)}" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                <span class="client-photo-fallback" aria-hidden="true">${escapeHTML(client.name.slice(0, 1).toUpperCase())}</span>
+            </div>
+            <div class="client-card-copy">
+                <span class="client-role">${escapeHTML(client.role)}</span>
+                <h3>${escapeHTML(client.name)}</h3>
+                <p>${escapeHTML(client.description)}</p>
+            </div>
+            <span class="client-card-arrow">↗</span>
+        </article>
+    `).join("");
+
+    // Duplicate the row to create a seamless continuous marquee.
+    track.innerHTML = createCards() + createCards();
+    track.setAttribute("aria-label", clients.map(c => c.name).join(", "));
+}
+
+function renderClientReviews() {
+    const grid = document.getElementById("reviewGrid");
+    if (!grid) return;
+
+    grid.innerHTML = clientReviews.map((review, index) => `
+        <a class="review-card" href="${escapeHTML(review.image)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHTML(review.title)} screenshot">
+            <div class="review-image-wrap">
+                <img src="${escapeHTML(review.image)}" alt="${escapeHTML(review.title)}" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                <span class="review-image-fallback" aria-hidden="true">ADD REVIEW SCREENSHOT</span>
+                <span class="review-zoom">↗</span>
+            </div>
+            <div class="review-card-caption">
+                <span>0${index + 1} / TESTIMONIAL</span>
+                <h3>${escapeHTML(review.title)}</h3>
+                <p>${escapeHTML(review.detail)}</p>
+            </div>
+        </a>
+    `).join("");
+}
 
 /* =========================================
    OPEN PROJECT MODAL
@@ -507,7 +571,6 @@ function openProject(index) {
     );
 }
 
-
 /* =========================================
    CLOSE MODAL
 ========================================= */
@@ -531,7 +594,6 @@ function closeProjectModal() {
     }, 200);
 }
 
-
 if (modalClose) {
 
     modalClose.addEventListener(
@@ -539,7 +601,6 @@ if (modalClose) {
         closeProjectModal
     );
 }
-
 
 /* =========================================
    CLOSE MODAL OUTSIDE
@@ -567,7 +628,6 @@ if (projectModal) {
     );
 }
 
-
 /* =========================================
    ESCAPE KEY
 ========================================= */
@@ -586,7 +646,6 @@ document.addEventListener(
 
     }
 );
-
 
 /* =========================================
    MOBILE MENU
@@ -619,7 +678,6 @@ if (
         }
     );
 }
-
 
 /* =========================================
    MOBILE NAV LINKS
@@ -658,7 +716,6 @@ if (mobileNav) {
     });
 }
 
-
 /* =========================================
    HEADER SCROLL
 ========================================= */
@@ -681,7 +738,6 @@ function handleHeaderScroll() {
     }
 }
 
-
 window.addEventListener(
     "scroll",
     handleHeaderScroll,
@@ -691,7 +747,6 @@ window.addEventListener(
 );
 
 handleHeaderScroll();
-
 
 /* =========================================
    SCROLL REVEAL
@@ -770,7 +825,6 @@ function observeRevealElements() {
     });
 }
 
-
 /* =========================================
    ACTIVE NAVIGATION
 ========================================= */
@@ -846,7 +900,6 @@ if (
     });
 }
 
-
 /* =========================================
    CONTACT FORM
 ========================================= */
@@ -862,7 +915,6 @@ if (
 
 })();
 
-
 const contactForm =
     document.getElementById("contactForm");
 
@@ -872,7 +924,6 @@ const submitButton =
 const formStatus =
     document.getElementById("formStatus");
 
-
 if (contactForm) {
 
     contactForm.addEventListener(
@@ -881,13 +932,11 @@ if (contactForm) {
 
             event.preventDefault();
 
-
             /* Clear old status */
 
             formStatus.textContent = "";
             formStatus.className =
                 "form-status";
-
 
             /* Disable button */
 
@@ -898,14 +947,12 @@ if (contactForm) {
                 <span>→</span>
             `;
 
-
             formStatus.textContent =
                 "Sending your message...";
 
             formStatus.classList.add(
                 "sending"
             );
-
 
             /*
              * EmailJS
@@ -931,7 +978,6 @@ if (contactForm) {
                 formStatus.className =
                     "form-status success";
 
-
                 submitButton.disabled = false;
 
                 submitButton.innerHTML = `
@@ -939,9 +985,7 @@ if (contactForm) {
                     <span>✓</span>
                 `;
 
-
                 contactForm.reset();
-
 
                 /* Reset button after 4 seconds */
 
@@ -963,13 +1007,11 @@ if (contactForm) {
                     error
                 );
 
-
                 formStatus.textContent =
                     "Something went wrong. Please try again or email me directly.";
 
                 formStatus.className =
                     "form-status error";
-
 
                 submitButton.disabled = false;
 
@@ -1006,7 +1048,6 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 }
 
-
 /* =========================================
    PAGE LOADER
 ========================================= */
@@ -1028,7 +1069,6 @@ window.addEventListener("load", () => {
 
 });
 
-
 /* =========================================
    INITIALIZE
 ========================================= */
@@ -1041,6 +1081,8 @@ document.addEventListener(
         renderProjects();
 
         renderServices();
+        renderClients();
+        renderClientReviews();
 
         observeRevealElements();
 
