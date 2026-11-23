@@ -142,8 +142,8 @@ const clientReviews = [
     { title: "Client Feedback 02", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-02.jpg" },
     { title: "Client Feedback 03", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-03.jpg" },
     { title: "Client Feedback 04", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-04.jpg" },
-    { title: "Client Feedback 04", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-05.jpg" },
-    { title: "Client Feedback 04", detail: "LinkedIn screenshot", image: "assets/images/reviews/review-06.png" }
+    { title: "Client Feedback 05", detail: "WhatsApp screenshot", image: "assets/images/reviews/review-05.jpg" },
+    { title: "Client Feedback 06", detail: "LinkedIn screenshot", image: "assets/images/reviews/review-06.png" }
 ];
 
 /* =========================================
